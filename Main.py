@@ -16,6 +16,7 @@ class MainScreen(BoxLayout):
         self.orientation = 'vertical'
         self.spacing = 10
         self.padding = 10
+        self.transactions = []  # List to store transactions
         self.build_ui()
 
     def build_ui(self):
@@ -60,25 +61,16 @@ class MainScreen(BoxLayout):
             font_size='24sp'
         )
 
-        # Transaction list (empty)
-        transactions_layout = GridLayout(cols=1, spacing=5, size_hint_y=None)
-        transactions_layout.bind(minimum_height=transactions_layout.setter('height'))
-
-        # Example transaction
-        example_transaction = Label(
-            text='- $50.00 Grocery Shopping',
-            color=(1, 0.5, 0.5, 1),
-            size_hint_y=None,
-            height=40
-        )
-        transactions_layout.add_widget(example_transaction)
+        # Transaction list
+        self.transactions_layout = GridLayout(cols=1, spacing=5, size_hint_y=None)
+        self.transactions_layout.bind(minimum_height=self.transactions_layout.setter('height'))
 
         # Add all widgets to main layout
         self.add_widget(header)
         self.add_widget(balance_label)
         self.add_widget(button_grid)
         self.add_widget(history_label)
-        self.add_widget(transactions_layout)
+        self.add_widget(self.transactions_layout)
 
     def dummy_action(self, instance):
         print("Dummy action triggered")
@@ -87,6 +79,17 @@ class MainScreen(BoxLayout):
         print("Navigating to expense entry screen")
         if self.parent:
             self.parent.manager.current = 'expense_entry'
+
+    def add_transaction(self, amount, category, note, date):
+        transaction_text = f"- ${amount} {category}: {note} on {date}"
+        transaction_label = Label(
+            text=transaction_text,
+            color=(1, 0.5, 0.5, 1),
+            size_hint_y=None,
+            height=40
+        )
+        self.transactions_layout.add_widget(transaction_label)
+        self.transactions.append(transaction_text)
 
 class ExpenseEntryScreen(BoxLayout):
     def __init__(self, **kwargs):
@@ -146,6 +149,15 @@ class ExpenseEntryScreen(BoxLayout):
             self.show_popup('Error', 'Please select a category.')
             return
 
+        # Add transaction to main screen
+        main_screen = self.parent.manager.get_screen('main').children[0]
+        main_screen.add_transaction(
+            self.amount_input.text,
+            self.category_spinner.text,
+            self.note_input.text,
+            self.date_input.text
+        )
+
         # Clear fields
         self.amount_input.text = ''
         self.category_spinner.text = 'Select Category'
@@ -156,8 +168,7 @@ class ExpenseEntryScreen(BoxLayout):
         self.show_popup('Success', 'Expense saved successfully.')
 
         # Return to main screen
-        if self.parent:
-            self.parent.manager.current = 'main'
+        self.parent.manager.current = 'main'
 
     def show_popup(self, title, message):
         popup = Popup(title=title, content=Label(text=message), size_hint=(0.8, 0.4))
