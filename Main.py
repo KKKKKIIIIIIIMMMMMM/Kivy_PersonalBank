@@ -103,7 +103,7 @@ class MainScreen(BoxLayout):
         self.balance -= amount
         self.update_balance_label()
 
-        transaction_text = f"- ${amount:.2f} {category}:\n{note} on {date}"
+        transaction_text = f"- ${amount:.2f} \n {category} \n {note} \n {date}"
         transaction_label = Label(
             text=transaction_text,
             color=(1, 0.5, 0.5, 1),
