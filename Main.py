@@ -8,6 +8,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.spinner import Spinner
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
+from kivy.uix.scrollview import ScrollView
 from datetime import datetime
 
 class MainScreen(BoxLayout):
@@ -61,16 +62,18 @@ class MainScreen(BoxLayout):
             font_size='24sp'
         )
 
-        # Transaction list
+        # Scrollable transaction list
+        scroll_view = ScrollView(size_hint=(1, 0.5))
         self.transactions_layout = GridLayout(cols=1, spacing=5, size_hint_y=None)
         self.transactions_layout.bind(minimum_height=self.transactions_layout.setter('height'))
+        scroll_view.add_widget(self.transactions_layout)
 
         # Add all widgets to main layout
         self.add_widget(header)
         self.add_widget(balance_label)
         self.add_widget(button_grid)
         self.add_widget(history_label)
-        self.add_widget(self.transactions_layout)
+        self.add_widget(scroll_view)
 
     def dummy_action(self, instance):
         print("Dummy action triggered")
