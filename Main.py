@@ -57,13 +57,22 @@ class AccountApp(App):
         transactions_layout.bind(minimum_height=transactions_layout.setter('height'))
         
 
+        # Example transaction
+        example_transaction = Label(
+            text='- $50.00 Grocery Shopping',
+            color=(1, 0.5, 0.5, 1),
+            size_hint_y=None,
+            height=40
+        )
+        transactions_layout.add_widget(example_transaction)
+
         
         # Add all widgets to main layout
         main_layout.add_widget(header)
         main_layout.add_widget(balance_label)
         main_layout.add_widget(button_grid)
         main_layout.add_widget(history_label)
-
+        main_layout.add_widget(transactions_layout)
         
         return main_layout
 
