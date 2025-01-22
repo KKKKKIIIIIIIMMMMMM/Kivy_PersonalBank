@@ -108,7 +108,7 @@ class MainScreen(BoxLayout):
             text=transaction_text,
             color=(1, 0.5, 0.5, 1),
             size_hint_y=None,
-            height=60  # Adjust height for better spacing
+            height=80  # Adjust height for better spacing
         )
         self.transactions_layout.add_widget(transaction_label)
 
