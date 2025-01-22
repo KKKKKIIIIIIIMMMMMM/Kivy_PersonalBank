@@ -1,3 +1,4 @@
+import json
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -11,6 +12,8 @@ from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from datetime import datetime
 
+TRANSACTIONS_FILE = 'transactions.json'
+
 class MainScreen(BoxLayout):
     def __init__(self, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
@@ -19,6 +22,7 @@ class MainScreen(BoxLayout):
         self.padding = 10
         self.transactions = []  # List to store transactions
         self.build_ui()
+        self.load_transactions()
 
     def build_ui(self):
         # Account header
@@ -84,6 +88,15 @@ class MainScreen(BoxLayout):
             self.parent.manager.current = 'expense_entry'
 
     def add_transaction(self, amount, category, note, date):
+        transaction = {
+            "amount": amount,
+            "category": category,
+            "note": note,
+            "date": date
+        }
+        self.transactions.append(transaction)
+        self.save_transactions()
+
         transaction_text = f"- ${amount} {category}: {note} on {date}"
         transaction_label = Label(
             text=transaction_text,
@@ -92,7 +105,26 @@ class MainScreen(BoxLayout):
             height=40
         )
         self.transactions_layout.add_widget(transaction_label)
-        self.transactions.append(transaction_text)
+
+    def save_transactions(self):
+        with open(TRANSACTIONS_FILE, 'w') as f:
+            json.dump(self.transactions, f)
+
+    def load_transactions(self):
+        try:
+            with open(TRANSACTIONS_FILE, 'r') as f:
+                self.transactions = json.load(f)
+                for transaction in self.transactions:
+                    transaction_text = f"- ${transaction['amount']} {transaction['category']}: {transaction['note']} on {transaction['date']}"
+                    transaction_label = Label(
+                        text=transaction_text,
+                        color=(1, 0.5, 0.5, 1),
+                        size_hint_y=None,
+                        height=40
+                    )
+                    self.transactions_layout.add_widget(transaction_label)
+        except FileNotFoundError:
+            print("No previous transactions found.")
 
 class ExpenseEntryScreen(BoxLayout):
     def __init__(self, **kwargs):
