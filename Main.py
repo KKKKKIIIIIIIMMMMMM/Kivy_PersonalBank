@@ -125,7 +125,7 @@ class MainScreen(BoxLayout):
                 self.transactions = json.load(f)
                 for transaction in self.transactions:
                     amount = float(transaction['amount'])
-                    transaction_text = f"- ${amount:.2f} {transaction['category']}:\n{transaction['note']} on {transaction['date']}"
+                    transaction_text = f"- ${amount:.2f} \n {transaction['category']}\n{transaction['note']} \n {transaction['date']}"
                     transaction_label = Label(
                         text=transaction_text,
                         color=(1, 0.5, 0.5, 1),
