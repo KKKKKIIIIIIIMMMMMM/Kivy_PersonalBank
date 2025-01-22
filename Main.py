@@ -85,7 +85,8 @@ class MainScreen(BoxLayout):
 
     def add_expense(self, instance):
         print("Navigating to expense entry screen")
-        self.parent.current = 'expense_entry'
+        if self.parent:
+            self.parent.manager.current = 'expense_entry'
 
 class ExpenseEntryScreen(BoxLayout):
     def __init__(self, **kwargs):
@@ -155,7 +156,8 @@ class ExpenseEntryScreen(BoxLayout):
         self.show_popup('Success', 'Expense saved successfully.')
 
         # Return to main screen
-        self.parent.current = 'main'
+        if self.parent:
+            self.parent.manager.current = 'main'
 
     def show_popup(self, title, message):
         popup = Popup(title=title, content=Label(text=message), size_hint=(0.8, 0.4))
