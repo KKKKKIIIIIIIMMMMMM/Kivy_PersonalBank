@@ -21,6 +21,7 @@ class MainScreen(BoxLayout):
         self.spacing = 10
         self.padding = 10
         self.transactions = []  # List to store transactions
+        self.balance = 0.0  # Initialize balance
         self.build_ui()
         self.load_transactions()
 
@@ -35,8 +36,8 @@ class MainScreen(BoxLayout):
         )
         header.add_widget(account_label)
 
-        balance_label = Label(
-            text='$0.00',
+        self.balance_label = Label(
+            text=f'${self.balance:.2f}',
             font_size='48sp',
             size_hint_y=0.2
         )
@@ -74,7 +75,7 @@ class MainScreen(BoxLayout):
 
         # Add all widgets to main layout
         self.add_widget(header)
-        self.add_widget(balance_label)
+        self.add_widget(self.balance_label)
         self.add_widget(button_grid)
         self.add_widget(history_label)
         self.add_widget(scroll_view)
@@ -88,6 +89,7 @@ class MainScreen(BoxLayout):
             self.parent.manager.current = 'expense_entry'
 
     def add_transaction(self, amount, category, note, date):
+        amount = float(amount)
         transaction = {
             "amount": amount,
             "category": category,
@@ -97,7 +99,11 @@ class MainScreen(BoxLayout):
         self.transactions.append(transaction)
         self.save_transactions()
 
-        transaction_text = f"- ${amount} {category}: {note} on {date}"
+        # Update balance
+        self.balance -= amount
+        self.update_balance_label()
+
+        transaction_text = f"- ${amount:.2f} {category}: {note} on {date}"
         transaction_label = Label(
             text=transaction_text,
             color=(1, 0.5, 0.5, 1),
@@ -105,6 +111,9 @@ class MainScreen(BoxLayout):
             height=40
         )
         self.transactions_layout.add_widget(transaction_label)
+
+    def update_balance_label(self):
+        self.balance_label.text = f'${self.balance:.2f}'
 
     def save_transactions(self):
         with open(TRANSACTIONS_FILE, 'w') as f:
@@ -115,7 +124,7 @@ class MainScreen(BoxLayout):
             with open(TRANSACTIONS_FILE, 'r') as f:
                 self.transactions = json.load(f)
                 for transaction in self.transactions:
-                    transaction_text = f"- ${transaction['amount']} {transaction['category']}: {transaction['note']} on {transaction['date']}"
+                    transaction_text = f"- ${transaction['amount']:.2f} {transaction['category']}: {transaction['note']} on {transaction['date']}"
                     transaction_label = Label(
                         text=transaction_text,
                         color=(1, 0.5, 0.5, 1),
@@ -123,6 +132,9 @@ class MainScreen(BoxLayout):
                         height=40
                     )
                     self.transactions_layout.add_widget(transaction_label)
+                    # Update balance
+                    self.balance -= transaction['amount']
+                self.update_balance_label()
         except FileNotFoundError:
             print("No previous transactions found.")
 
