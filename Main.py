@@ -103,12 +103,12 @@ class MainScreen(BoxLayout):
         self.balance -= amount
         self.update_balance_label()
 
-        transaction_text = f"- ${amount:.2f} {category}: {note} on {date}"
+        transaction_text = f"- ${amount:.2f} {category}:\n{note} on {date}"
         transaction_label = Label(
             text=transaction_text,
             color=(1, 0.5, 0.5, 1),
             size_hint_y=None,
-            height=40
+            height=60  # Adjust height for better spacing
         )
         self.transactions_layout.add_widget(transaction_label)
 
@@ -124,19 +124,22 @@ class MainScreen(BoxLayout):
             with open(TRANSACTIONS_FILE, 'r') as f:
                 self.transactions = json.load(f)
                 for transaction in self.transactions:
-                    transaction_text = f"- ${transaction['amount']:.2f} {transaction['category']}: {transaction['note']} on {transaction['date']}"
+                    amount = float(transaction['amount'])
+                    transaction_text = f"- ${amount:.2f} {transaction['category']}:\n{transaction['note']} on {transaction['date']}"
                     transaction_label = Label(
                         text=transaction_text,
                         color=(1, 0.5, 0.5, 1),
                         size_hint_y=None,
-                        height=40
+                        height=60  # Adjust height for better spacing
                     )
                     self.transactions_layout.add_widget(transaction_label)
                     # Update balance
-                    self.balance -= transaction['amount']
+                    self.balance -= amount
                 self.update_balance_label()
         except FileNotFoundError:
             print("No previous transactions found.")
+        except ValueError as e:
+            print(f"Error loading transactions: {e}")
 
 class ExpenseEntryScreen(BoxLayout):
     def __init__(self, **kwargs):
