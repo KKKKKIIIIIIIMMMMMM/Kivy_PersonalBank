@@ -112,15 +112,36 @@ class MainScreen(BoxLayout):
             self.balance -= amount
         self.update_balance_label()
 
-        transaction_type = "Income" if is_income else "Expense"
-        transaction_text = f"{transaction_type} - ${amount:.2f} {category}:\n{note} on {date}"
-        transaction_label = Label(
-            text=transaction_text,
-            color=(0.5, 1, 0.5, 1) if is_income else (1, 0.5, 0.5, 1),
-            size_hint_y=None,
-            height=60
+        # Create layout for transaction
+        transaction_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=60, padding=10, spacing=10)
+
+        # Left side: Title and Note
+        left_layout = BoxLayout(orientation='vertical')
+        title_label = Label(
+            text=f"Title: {category}",
+            color=(0.7, 0.6, 1, 1),
+            bold=True
         )
-        self.transactions_layout.add_widget(transaction_label)
+        note_label = Label(
+            text=f"Note: {note}\n{date}",
+            color=(0.7, 0.6, 1, 1)
+        )
+        left_layout.add_widget(title_label)
+        left_layout.add_widget(note_label)
+
+        # Right side: Amount
+        amount_label = Label(
+            text=f"${amount:.2f}",
+            color=(0.5, 1, 0.5, 1) if is_income else (1, 0.5, 0.5, 1),
+            bold=True
+        )
+
+        # Add to transaction layout
+        transaction_layout.add_widget(left_layout)
+        transaction_layout.add_widget(amount_label)
+
+        # Add to transactions layout
+        self.transactions_layout.add_widget(transaction_layout)
 
     def update_balance_label(self):
         self.balance_label.text = f'${self.balance:.2f}'
