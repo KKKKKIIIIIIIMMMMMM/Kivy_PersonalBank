@@ -37,9 +37,11 @@ class MainScreen(BoxLayout):
         header.add_widget(account_label)
 
         self.balance_label = Label(
-            text=f'${self.balance:.2f}',
+            text=f'${self.balance:.2f}' , 
             font_size='48sp',
+            bold=True,
             size_hint_y=0.2
+            
         )
 
         # Button grid
@@ -162,17 +164,17 @@ class MainScreen(BoxLayout):
                     date = transaction['date']
 
                     # Create layout for transaction
-                    transaction_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=60, padding=10, spacing=10)
+                    transaction_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=80, padding=10, spacing=10)
 
                     # Left side: Title and Note
-                    left_layout = BoxLayout(orientation='vertical')
+                    left_layout = BoxLayout(orientation='horizontal')
                     title_label = Label(
-                        text=f"Title: {category}",
+                        text=f"{category}",
                         color=(0.7, 0.6, 1, 1),
                         bold=True
                     )
                     note_label = Label(
-                        text=f"Note: {note}\non {date}",
+                        text=f"Note: {note}\n {date}",
                         color=(0.7, 0.6, 1, 1)
                     )
                     left_layout.add_widget(title_label)

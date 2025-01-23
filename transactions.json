@@ -19,5 +19,26 @@
         "note": "",
         "date": "2025-01-24 00:08:05",
         "is_income": true
+    },
+    {
+        "amount": 30.0,
+        "category": "Utilities",
+        "note": "",
+        "date": "2025-01-24 00:11:46",
+        "is_income": false
+    },
+    {
+        "amount": 500.0,
+        "category": "Gift",
+        "note": "",
+        "date": "2025-01-24 00:11:46",
+        "is_income": true
+    },
+    {
+        "amount": 500.0,
+        "category": "Business",
+        "note": "fuck u",
+        "date": "2025-01-24 00:18:40",
+        "is_income": true
     }
 ]
