@@ -47,7 +47,7 @@ class MainScreen(BoxLayout):
         buttons = [
             ('Calculator', self.dummy_action),
             ('Add Expense', self.add_expense),
-            ('Add Income', self.dummy_action),
+            ('Add Income', self.add_income),
             ('Report', self.dummy_action)
         ]
         for text, action in buttons:
@@ -88,27 +88,37 @@ class MainScreen(BoxLayout):
         if self.parent:
             self.parent.manager.current = 'expense_entry'
 
-    def add_transaction(self, amount, category, note, date):
+    def add_income(self, instance):
+        print("Navigating to income entry screen")
+        if self.parent:
+            self.parent.manager.current = 'income_entry'
+
+    def add_transaction(self, amount, category, note, date, is_income=False):
         amount = float(amount)
         transaction = {
             "amount": amount,
             "category": category,
             "note": note,
-            "date": date
+            "date": date,
+            "is_income": is_income
         }
         self.transactions.append(transaction)
         self.save_transactions()
 
         # Update balance
-        self.balance -= amount
+        if is_income:
+            self.balance += amount
+        else:
+            self.balance -= amount
         self.update_balance_label()
 
-        transaction_text = f"- ${amount:.2f} \n {category} \n {note} \n {date}"
+        transaction_type = "Income" if is_income else "Expense"
+        transaction_text = f"{transaction_type} - ${amount:.2f} {category}:\n{note} on {date}"
         transaction_label = Label(
             text=transaction_text,
-            color=(1, 0.5, 0.5, 1),
+            color=(0.5, 1, 0.5, 1) if is_income else (1, 0.5, 0.5, 1),
             size_hint_y=None,
-            height=80  # Adjust height for better spacing
+            height=60
         )
         self.transactions_layout.add_widget(transaction_label)
 
@@ -125,16 +135,20 @@ class MainScreen(BoxLayout):
                 self.transactions = json.load(f)
                 for transaction in self.transactions:
                     amount = float(transaction['amount'])
-                    transaction_text = f"- ${amount:.2f} \n {transaction['category']}\n{transaction['note']} \n {transaction['date']}"
+                    transaction_type = "Income" if transaction.get('is_income', False) else "Expense"
+                    transaction_text = f"{transaction_type} - ${amount:.2f} {transaction['category']}:\n{transaction['note']} on {transaction['date']}"
                     transaction_label = Label(
                         text=transaction_text,
-                        color=(1, 0.5, 0.5, 1),
+                        color=(0.5, 1, 0.5, 1) if transaction.get('is_income', False) else (1, 0.5, 0.5, 1),
                         size_hint_y=None,
-                        height=60  # Adjust height for better spacing
+                        height=60
                     )
                     self.transactions_layout.add_widget(transaction_label)
                     # Update balance
-                    self.balance -= amount
+                    if transaction.get('is_income', False):
+                        self.balance += amount
+                    else:
+                        self.balance -= amount
                 self.update_balance_label()
         except FileNotFoundError:
             print("No previous transactions found.")
@@ -224,6 +238,90 @@ class ExpenseEntryScreen(BoxLayout):
         popup = Popup(title=title, content=Label(text=message), size_hint=(0.8, 0.4))
         popup.open()
 
+class IncomeEntryScreen(BoxLayout):
+    def __init__(self, **kwargs):
+        super(IncomeEntryScreen, self).__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.spacing = 10
+        self.padding = 10
+        self.build_ui()
+
+    def build_ui(self):
+        # Amount input
+        self.amount_input = TextInput(
+            hint_text='Amount',
+            input_filter='float',
+            multiline=False
+        )
+
+        # Category selector
+        self.category_spinner = Spinner(
+            text='Select Category',
+            values=('Salary', 'Business', 'Investment', 'Gift', 'Other')
+        )
+
+        # Note input
+        self.note_input = TextInput(
+            hint_text='Note/Description',
+            multiline=True
+        )
+
+        # Date/Time input
+        self.date_input = TextInput(
+            text=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            multiline=False
+        )
+
+        # Save button
+        save_button = Button(
+            text='Save',
+            background_color=(0.4, 0.8, 0.4, 1)
+        )
+        save_button.bind(on_press=self.save_income)
+
+        # Add widgets to layout
+        self.add_widget(Label(text='Add Income', font_size='24sp', size_hint_y=0.1))
+        self.add_widget(self.amount_input)
+        self.add_widget(self.category_spinner)
+        self.add_widget(self.note_input)
+        self.add_widget(self.date_input)
+        self.add_widget(save_button)
+
+    def save_income(self, instance):
+        # Validate inputs
+        if not self.amount_input.text or float(self.amount_input.text) <= 0:
+            self.show_popup('Error', 'Amount must be a positive number.')
+            return
+        if self.category_spinner.text == 'Select Category':
+            self.show_popup('Error', 'Please select a category.')
+            return
+
+        # Add transaction to main screen
+        main_screen = self.parent.manager.get_screen('main').children[0]
+        main_screen.add_transaction(
+            self.amount_input.text,
+            self.category_spinner.text,
+            self.note_input.text,
+            self.date_input.text,
+            is_income=True
+        )
+
+        # Clear fields
+        self.amount_input.text = ''
+        self.category_spinner.text = 'Select Category'
+        self.note_input.text = ''
+        self.date_input.text = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # Show confirmation
+        self.show_popup('Success', 'Income saved successfully.')
+
+        # Return to main screen
+        self.parent.manager.current = 'main'
+
+    def show_popup(self, title, message):
+        popup = Popup(title=title, content=Label(text=message), size_hint=(0.8, 0.4))
+        popup.open()
+
 class AccountApp(App):
     def build(self):
         # Set window color
@@ -241,6 +339,11 @@ class AccountApp(App):
         expense_entry_screen = Screen(name='expense_entry')
         expense_entry_screen.add_widget(ExpenseEntryScreen())
         sm.add_widget(expense_entry_screen)
+
+        # Income entry screen
+        income_entry_screen = Screen(name='income_entry')
+        income_entry_screen.add_widget(IncomeEntryScreen())
+        sm.add_widget(income_entry_screen)
 
         return sm
 
