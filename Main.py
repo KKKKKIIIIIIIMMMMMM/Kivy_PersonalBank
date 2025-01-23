@@ -196,6 +196,13 @@ class ExpenseEntryScreen(BoxLayout):
         )
         save_button.bind(on_press=self.save_expense)
 
+        # Back button
+        back_button = Button(
+            text='Back',
+            background_color=(0.8, 0.4, 0.4, 1)
+        )
+        back_button.bind(on_press=self.go_back)
+
         # Add widgets to layout
         self.add_widget(Label(text='Add Expense', font_size='24sp', size_hint_y=0.1))
         self.add_widget(self.amount_input)
@@ -203,6 +210,7 @@ class ExpenseEntryScreen(BoxLayout):
         self.add_widget(self.note_input)
         self.add_widget(self.date_input)
         self.add_widget(save_button)
+        self.add_widget(back_button)
 
     def save_expense(self, instance):
         # Validate inputs
@@ -232,6 +240,9 @@ class ExpenseEntryScreen(BoxLayout):
         self.show_popup('Success', 'Expense saved successfully.')
 
         # Return to main screen
+        self.parent.manager.current = 'main'
+
+    def go_back(self, instance):
         self.parent.manager.current = 'main'
 
     def show_popup(self, title, message):
@@ -279,6 +290,13 @@ class IncomeEntryScreen(BoxLayout):
         )
         save_button.bind(on_press=self.save_income)
 
+        # Back button
+        back_button = Button(
+            text='Back',
+            background_color=(0.8, 0.4, 0.4, 1)
+        )
+        back_button.bind(on_press=self.go_back)
+
         # Add widgets to layout
         self.add_widget(Label(text='Add Income', font_size='24sp', size_hint_y=0.1))
         self.add_widget(self.amount_input)
@@ -286,6 +304,7 @@ class IncomeEntryScreen(BoxLayout):
         self.add_widget(self.note_input)
         self.add_widget(self.date_input)
         self.add_widget(save_button)
+        self.add_widget(back_button)
 
     def save_income(self, instance):
         # Validate inputs
@@ -316,6 +335,9 @@ class IncomeEntryScreen(BoxLayout):
         self.show_popup('Success', 'Income saved successfully.')
 
         # Return to main screen
+        self.parent.manager.current = 'main'
+
+    def go_back(self, instance):
         self.parent.manager.current = 'main'
 
     def show_popup(self, title, message):
