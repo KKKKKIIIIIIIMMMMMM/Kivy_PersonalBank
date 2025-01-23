@@ -1,0 +1,23 @@
+[
+    {
+        "amount": 200.0,
+        "category": "Food",
+        "note": "",
+        "date": "2025-01-24 00:04:18",
+        "is_income": false
+    },
+    {
+        "amount": 120.0,
+        "category": "Utilities",
+        "note": "",
+        "date": "2025-01-24 00:06:08",
+        "is_income": false
+    },
+    {
+        "amount": 123.0,
+        "category": "Salary",
+        "note": "",
+        "date": "2025-01-24 00:08:05",
+        "is_income": true
+    }
+]

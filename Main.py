@@ -148,7 +148,7 @@ class MainScreen(BoxLayout):
 
     def save_transactions(self):
         with open(TRANSACTIONS_FILE, 'w') as f:
-            json.dump(self.transactions, f)
+            json.dump(self.transactions, f, indent=4)
 
     def load_transactions(self):
         try:
@@ -156,17 +156,44 @@ class MainScreen(BoxLayout):
                 self.transactions = json.load(f)
                 for transaction in self.transactions:
                     amount = float(transaction['amount'])
-                    transaction_type = "Income" if transaction.get('is_income', False) else "Expense"
-                    transaction_text = f"{transaction_type} - ${amount:.2f} \n {transaction['category']}:\n{transaction['note']} \n {transaction['date']}"
-                    transaction_label = Label(
-                        text=transaction_text,
-                        color=(0.5, 1, 0.5, 1) if transaction.get('is_income', False) else (1, 0.5, 0.5, 1),
-                        size_hint_y=None,
-                        height=100
+                    is_income = transaction.get('is_income', False)
+                    category = transaction['category']
+                    note = transaction['note']
+                    date = transaction['date']
+
+                    # Create layout for transaction
+                    transaction_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=60, padding=10, spacing=10)
+
+                    # Left side: Title and Note
+                    left_layout = BoxLayout(orientation='vertical')
+                    title_label = Label(
+                        text=f"Title: {category}",
+                        color=(0.7, 0.6, 1, 1),
+                        bold=True
                     )
-                    self.transactions_layout.add_widget(transaction_label)
+                    note_label = Label(
+                        text=f"Note: {note}\non {date}",
+                        color=(0.7, 0.6, 1, 1)
+                    )
+                    left_layout.add_widget(title_label)
+                    left_layout.add_widget(note_label)
+
+                    # Right side: Amount
+                    amount_label = Label(
+                        text=f"${amount:.2f}",
+                        color=(0.5, 1, 0.5, 1) if is_income else (1, 0.5, 0.5, 1),
+                        bold=True
+                    )
+
+                    # Add to transaction layout
+                    transaction_layout.add_widget(left_layout)
+                    transaction_layout.add_widget(amount_label)
+
+                    # Add to transactions layout
+                    self.transactions_layout.add_widget(transaction_layout)
+
                     # Update balance
-                    if transaction.get('is_income', False):
+                    if is_income:
                         self.balance += amount
                     else:
                         self.balance -= amount
