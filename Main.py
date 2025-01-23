@@ -136,12 +136,12 @@ class MainScreen(BoxLayout):
                 for transaction in self.transactions:
                     amount = float(transaction['amount'])
                     transaction_type = "Income" if transaction.get('is_income', False) else "Expense"
-                    transaction_text = f"{transaction_type} - ${amount:.2f} {transaction['category']}:\n{transaction['note']} on {transaction['date']}"
+                    transaction_text = f"{transaction_type} - ${amount:.2f} \n {transaction['category']}:\n{transaction['note']} \n {transaction['date']}"
                     transaction_label = Label(
                         text=transaction_text,
                         color=(0.5, 1, 0.5, 1) if transaction.get('is_income', False) else (1, 0.5, 0.5, 1),
                         size_hint_y=None,
-                        height=60
+                        height=100
                     )
                     self.transactions_layout.add_widget(transaction_label)
                     # Update balance
