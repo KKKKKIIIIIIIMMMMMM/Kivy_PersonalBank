@@ -12,5 +12,19 @@
         "note": "",
         "date": "2025-01-24 22:38:57",
         "is_income": true
+    },
+    {
+        "amount": 2154.0,
+        "category": "Salary",
+        "note": "",
+        "date": "2025-01-24 22:40:29",
+        "is_income": true
+    },
+    {
+        "amount": 7.0,
+        "category": "Food",
+        "note": "",
+        "date": "2025-01-24 22:43:09",
+        "is_income": false
     }
 ]

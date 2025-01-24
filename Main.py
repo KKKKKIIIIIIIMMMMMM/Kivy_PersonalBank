@@ -408,6 +408,23 @@ class ReportScreen(BoxLayout):
         self.build_ui()
 
     def build_ui(self):
+        # Top bar with Back button
+        top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.1)
+        
+        # Spacer to push the button to the right
+        top_bar.add_widget(Label(size_hint_x=0.9))
+        
+        # Back button
+        back_button = Button(
+            text='Back',
+            background_color=(0.8, 0.4, 0.4, 1),
+            size_hint_x=0.1
+        )
+        back_button.bind(on_press=self.go_back)
+        top_bar.add_widget(back_button)
+        
+        self.add_widget(top_bar)
+
         # Placeholder for report content
         self.add_widget(Label(text='Report Screen', font_size='24sp', size_hint_y=0.1))
 
@@ -438,14 +455,6 @@ class ReportScreen(BoxLayout):
         self.add_widget(Label(text='Expense Summary', font_size='20sp', size_hint_y=0.1))
         for category, total in expense_summary.items():
             self.add_widget(Label(text=f"{category}: ${total:.2f}", size_hint_y=None, height=30))
-
-        # Back button
-        back_button = Button(
-            text='Back',
-            background_color=(0.8, 0.4, 0.4, 1)
-        )
-        back_button.bind(on_press=self.go_back)
-        self.add_widget(back_button)
 
     def go_back(self, instance):
         self.parent.manager.current = 'main'
