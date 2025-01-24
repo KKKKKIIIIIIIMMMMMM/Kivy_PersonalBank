@@ -37,11 +37,10 @@ class MainScreen(BoxLayout):
         header.add_widget(account_label)
 
         self.balance_label = Label(
-            text=f'${self.balance:.2f}' , 
+            text=f'${self.balance:.2f}',
             font_size='48sp',
-            bold=True,
+            bold=True,  # Make text bold
             size_hint_y=0.2
-            
         )
 
         # Button grid
@@ -50,7 +49,7 @@ class MainScreen(BoxLayout):
             ('Calculator', self.dummy_action),
             ('Add Expense', self.add_expense),
             ('Add Income', self.add_income),
-            ('Report', self.dummy_action)
+            ('Report', self.view_report)  # Updated to navigate to report
         ]
         for text, action in buttons:
             btn = Button(
@@ -95,6 +94,11 @@ class MainScreen(BoxLayout):
         if self.parent:
             self.parent.manager.current = 'income_entry'
 
+    def view_report(self, instance):
+        print("Navigating to report screen")
+        if self.parent:
+            self.parent.manager.current = 'report'
+
     def add_transaction(self, amount, category, note, date, is_income=False):
         amount = float(amount)
         transaction = {
@@ -125,7 +129,7 @@ class MainScreen(BoxLayout):
             bold=True
         )
         note_label = Label(
-            text=f"Note: {note}\n{date}",
+            text=f"Note: {note}\non {date}",
             color=(0.7, 0.6, 1, 1)
         )
         left_layout.add_widget(title_label)
@@ -164,17 +168,17 @@ class MainScreen(BoxLayout):
                     date = transaction['date']
 
                     # Create layout for transaction
-                    transaction_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=80, padding=10, spacing=10)
+                    transaction_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=60, padding=10, spacing=10)
 
                     # Left side: Title and Note
-                    left_layout = BoxLayout(orientation='horizontal')
+                    left_layout = BoxLayout(orientation='vertical')
                     title_label = Label(
-                        text=f"{category}",
+                        text=f"Title: {category}",
                         color=(0.7, 0.6, 1, 1),
                         bold=True
                     )
                     note_label = Label(
-                        text=f"Note: {note}\n {date}",
+                        text=f"Note: {note}\non {date}",
                         color=(0.7, 0.6, 1, 1)
                     )
                     left_layout.add_widget(title_label)
@@ -394,6 +398,29 @@ class IncomeEntryScreen(BoxLayout):
         popup = Popup(title=title, content=Label(text=message), size_hint=(0.8, 0.4))
         popup.open()
 
+class ReportScreen(BoxLayout):
+    def __init__(self, **kwargs):
+        super(ReportScreen, self).__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.spacing = 10
+        self.padding = 10
+        self.build_ui()
+
+    def build_ui(self):
+        # Placeholder for report content
+        self.add_widget(Label(text='Report Screen', font_size='24sp', size_hint_y=0.1))
+
+        # Back button
+        back_button = Button(
+            text='Back',
+            background_color=(0.8, 0.4, 0.4, 1)
+        )
+        back_button.bind(on_press=self.go_back)
+        self.add_widget(back_button)
+
+    def go_back(self, instance):
+        self.parent.manager.current = 'main'
+
 class AccountApp(App):
     def build(self):
         # Set window color
@@ -416,6 +443,11 @@ class AccountApp(App):
         income_entry_screen = Screen(name='income_entry')
         income_entry_screen.add_widget(IncomeEntryScreen())
         sm.add_widget(income_entry_screen)
+
+        # Report screen
+        report_screen = Screen(name='report')
+        report_screen.add_widget(ReportScreen())
+        sm.add_widget(report_screen)
 
         return sm
 
