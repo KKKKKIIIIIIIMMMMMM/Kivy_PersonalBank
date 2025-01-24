@@ -5,5 +5,12 @@
         "note": "",
         "date": "2025-01-24 22:30:26",
         "is_income": false
+    },
+    {
+        "amount": 54545.0,
+        "category": "Salary",
+        "note": "",
+        "date": "2025-01-24 22:38:57",
+        "is_income": true
     }
 ]

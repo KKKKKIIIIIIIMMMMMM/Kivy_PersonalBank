@@ -168,12 +168,12 @@ class MainScreen(BoxLayout):
                     date = transaction['date']
 
                     # Create layout for transaction
-                    transaction_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=60, padding=10, spacing=10)
+                    transaction_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=80, padding=10, spacing=10)
 
                     # Left side: Title and Note
-                    left_layout = BoxLayout(orientation='vertical')
+                    left_layout = BoxLayout(orientation='horizontal')
                     title_label = Label(
-                        text=f"Title: {category}",
+                        text=f"{category}",
                         color=(0.7, 0.6, 1, 1),
                         bold=True
                     )
@@ -399,16 +399,45 @@ class IncomeEntryScreen(BoxLayout):
         popup.open()
 
 class ReportScreen(BoxLayout):
-    def __init__(self, **kwargs):
+    def __init__(self, transactions, **kwargs):
         super(ReportScreen, self).__init__(**kwargs)
         self.orientation = 'vertical'
         self.spacing = 10
         self.padding = 10
+        self.transactions = transactions
         self.build_ui()
 
     def build_ui(self):
         # Placeholder for report content
         self.add_widget(Label(text='Report Screen', font_size='24sp', size_hint_y=0.1))
+
+        # Calculate summary
+        income_summary = {}
+        expense_summary = {}
+
+        for transaction in self.transactions:
+            category = transaction['category']
+            amount = float(transaction['amount'])
+            if transaction.get('is_income', False):
+                if category in income_summary:
+                    income_summary[category] += amount
+                else:
+                    income_summary[category] = amount
+            else:
+                if category in expense_summary:
+                    expense_summary[category] += amount
+                else:
+                    expense_summary[category] = amount
+
+        # Display income summary
+        self.add_widget(Label(text='Income Summary', font_size='20sp', size_hint_y=0.1))
+        for category, total in income_summary.items():
+            self.add_widget(Label(text=f"{category}: ${total:.2f}", size_hint_y=None, height=30))
+
+        # Display expense summary
+        self.add_widget(Label(text='Expense Summary', font_size='20sp', size_hint_y=0.1))
+        for category, total in expense_summary.items():
+            self.add_widget(Label(text=f"{category}: ${total:.2f}", size_hint_y=None, height=30))
 
         # Back button
         back_button = Button(
@@ -446,7 +475,7 @@ class AccountApp(App):
 
         # Report screen
         report_screen = Screen(name='report')
-        report_screen.add_widget(ReportScreen())
+        report_screen.add_widget(ReportScreen(main_screen.children[0].transactions))
         sm.add_widget(report_screen)
 
         return sm
