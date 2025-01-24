@@ -221,7 +221,7 @@ class ExpenseEntryScreen(BoxLayout):
 
     def build_ui(self):
         # Top bar with Back button
-        top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.1)
+        top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.5)
         
         # Spacer to push the button to the right
         top_bar.add_widget(Label(size_hint_x=0.9))
@@ -322,7 +322,7 @@ class IncomeEntryScreen(BoxLayout):
 
     def build_ui(self):
         # Top bar with Back button
-        top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.1)
+        top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.5)
         
         # Spacer to push the button to the right
         top_bar.add_widget(Label(size_hint_x=0.9))
@@ -427,7 +427,7 @@ class ReportScreen(BoxLayout):
         self.clear_widgets()  # Clear existing widgets
 
         # Top bar with Back button
-        top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.1)
+        top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.025)
         top_bar.add_widget(Label(size_hint_x=0.9))
         back_button = Button(
             size_hint=(None, None),
