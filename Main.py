@@ -218,53 +218,60 @@ class ExpenseEntryScreen(BoxLayout):
         self.build_ui()
 
     def build_ui(self):
-        # Amount input
+        # Top bar with Back button
+        top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.1)
+        
+        # Spacer to push the button to the right
+        top_bar.add_widget(Label(size_hint_x=0.9))
+        
+        # Back button with image
+        back_button = Button(
+            size_hint=(None, None),
+            size=(50, 50),  # Adjust size as needed
+            background_normal='background_normal.png'  # Path to your image
+        )
+        back_button.bind(on_press=self.go_back)
+        top_bar.add_widget(back_button)
+        
+        self.add_widget(top_bar)
+
+        # Add Expense title
+        self.add_widget(Label(text='Add Expense', font_size='24sp', size_hint_y=0.1))
+
+        # Rest of the expense entry UI
         self.amount_input = TextInput(
             hint_text='Amount',
             input_filter='float',
             multiline=False
         )
 
-        # Category selector
         self.category_spinner = Spinner(
             text='Select Category',
             values=('Food', 'Transport', 'Utilities', 'Entertainment', 'Other')
         )
 
-        # Note input
         self.note_input = TextInput(
             hint_text='Note/Description',
             multiline=True
         )
 
-        # Date/Time input
         self.date_input = TextInput(
             text=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             multiline=False
         )
 
-        # Save button
         save_button = Button(
             text='Save',
             background_color=(0.4, 0.8, 0.4, 1)
         )
         save_button.bind(on_press=self.save_expense)
 
-        # Back button
-        back_button = Button(
-            text='Back',
-            background_color=(0.8, 0.4, 0.4, 1)
-        )
-        back_button.bind(on_press=self.go_back)
-
         # Add widgets to layout
-        self.add_widget(Label(text='Add Expense', font_size='24sp', size_hint_y=0.1))
         self.add_widget(self.amount_input)
         self.add_widget(self.category_spinner)
         self.add_widget(self.note_input)
         self.add_widget(self.date_input)
         self.add_widget(save_button)
-        self.add_widget(back_button)
 
     def save_expense(self, instance):
         # Validate inputs
@@ -312,53 +319,60 @@ class IncomeEntryScreen(BoxLayout):
         self.build_ui()
 
     def build_ui(self):
-        # Amount input
+        # Top bar with Back button
+        top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.1)
+        
+        # Spacer to push the button to the right
+        top_bar.add_widget(Label(size_hint_x=0.9))
+        
+        # Back button with image
+        back_button = Button(
+            size_hint=(None, None),
+            size=(50, 50),  # Adjust size as needed
+            background_normal='background_normal.png'  # Path to your image
+        )
+        back_button.bind(on_press=self.go_back)
+        top_bar.add_widget(back_button)
+        
+        self.add_widget(top_bar)
+
+        # Add Income title
+        self.add_widget(Label(text='Add Income', font_size='24sp', size_hint_y=0.1))
+
+        # Rest of the income entry UI
         self.amount_input = TextInput(
             hint_text='Amount',
             input_filter='float',
             multiline=False
         )
 
-        # Category selector
         self.category_spinner = Spinner(
             text='Select Category',
             values=('Salary', 'Business', 'Investment', 'Gift', 'Other')
         )
 
-        # Note input
         self.note_input = TextInput(
             hint_text='Note/Description',
             multiline=True
         )
 
-        # Date/Time input
         self.date_input = TextInput(
             text=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             multiline=False
         )
 
-        # Save button
         save_button = Button(
             text='Save',
             background_color=(0.4, 0.8, 0.4, 1)
         )
         save_button.bind(on_press=self.save_income)
 
-        # Back button
-        back_button = Button(
-            text='Back',
-            background_color=(0.8, 0.4, 0.4, 1)
-        )
-        back_button.bind(on_press=self.go_back)
-
         # Add widgets to layout
-        self.add_widget(Label(text='Add Income', font_size='24sp', size_hint_y=0.1))
         self.add_widget(self.amount_input)
         self.add_widget(self.category_spinner)
         self.add_widget(self.note_input)
         self.add_widget(self.date_input)
         self.add_widget(save_button)
-        self.add_widget(back_button)
 
     def save_income(self, instance):
         # Validate inputs
@@ -426,7 +440,7 @@ class ReportScreen(BoxLayout):
         self.add_widget(top_bar)
 
         # Report title
-        self.add_widget(Label(text='Report Screen', font_size='24sp', size_hint_y=0.05))
+        self.add_widget(Label(text='Report', font_size='24sp', size_hint_y=0.05, bold = True))
 
         # Calculate summary
         income_summary = {}
