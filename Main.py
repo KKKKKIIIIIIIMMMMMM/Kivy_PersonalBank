@@ -97,6 +97,8 @@ class MainScreen(BoxLayout):
     def view_report(self, instance):
         print("Navigating to report screen")
         if self.parent:
+            report_screen = self.parent.manager.get_screen('report').children[0]
+            report_screen.update_transactions(self.transactions)
             self.parent.manager.current = 'report'
 
     def add_transaction(self, amount, category, note, date, is_income=False):
@@ -422,25 +424,22 @@ class ReportScreen(BoxLayout):
         self.build_ui()
 
     def build_ui(self):
+        self.clear_widgets()  # Clear existing widgets
+
         # Top bar with Back button
         top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.1)
-        
-        # Spacer to push the button to the right
         top_bar.add_widget(Label(size_hint_x=0.9))
-        
-        # Back button with image
         back_button = Button(
             size_hint=(None, None),
-            size=(50, 50),  # Adjust size as needed
-            background_normal='background_normal.png'  # Path to your image
+            size=(50, 50),
+            background_normal='background_normal.png'
         )
         back_button.bind(on_press=self.go_back)
         top_bar.add_widget(back_button)
-        
         self.add_widget(top_bar)
 
         # Report title
-        self.add_widget(Label(text='Report', font_size='24sp', size_hint_y=0.05, bold = True))
+        self.add_widget(Label(text='Report Screen', font_size='24sp', size_hint_y=0.05))
 
         # Calculate summary
         income_summary = {}
@@ -470,8 +469,9 @@ class ReportScreen(BoxLayout):
         for category, total in expense_summary.items():
             self.add_widget(Label(text=f"{category}: ${total:.2f}", size_hint_y=None, height=30))
 
-        # Spacer at the bottom
-        self.add_widget(Label(size_hint_y=0.1))
+    def update_transactions(self, transactions):
+        self.transactions = transactions
+        self.build_ui()
 
     def go_back(self, instance):
         self.parent.manager.current = 'main'
