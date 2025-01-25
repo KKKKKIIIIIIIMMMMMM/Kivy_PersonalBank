@@ -11,6 +11,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from datetime import datetime
+from kivy.core.audio import SoundLoader
 
 TRANSACTIONS_FILE = 'transactions.json'
 
@@ -217,24 +218,20 @@ class ExpenseEntryScreen(BoxLayout):
         self.orientation = 'vertical'
         self.spacing = 10
         self.padding = 10
+        self.sound = SoundLoader.load('expense.mp3')  # Load your sound file
         self.build_ui()
 
     def build_ui(self):
         # Top bar with Back button
         top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.5)
-        
-        # Spacer to push the button to the right
         top_bar.add_widget(Label(size_hint_x=0.9))
-        
-        # Back button with image
         back_button = Button(
             size_hint=(None, None),
-            size=(50, 50),  # Adjust size as needed
-            background_normal='background_normal.png'  # Path to your image
+            size=(50, 50),
+            background_normal='path/to/your/image.png'
         )
         back_button.bind(on_press=self.go_back)
         top_bar.add_widget(back_button)
-        
         self.add_widget(top_bar)
 
         # Add Expense title
@@ -284,6 +281,10 @@ class ExpenseEntryScreen(BoxLayout):
             self.show_popup('Error', 'Please select a category.')
             return
 
+        # Play sound
+        if self.sound:
+            self.sound.play()
+
         # Add transaction to main screen
         main_screen = self.parent.manager.get_screen('main').children[0]
         main_screen.add_transaction(
@@ -318,24 +319,20 @@ class IncomeEntryScreen(BoxLayout):
         self.orientation = 'vertical'
         self.spacing = 10
         self.padding = 10
+        self.sound = SoundLoader.load('income.mp3')  # Load your sound file
         self.build_ui()
 
     def build_ui(self):
         # Top bar with Back button
         top_bar = BoxLayout(orientation='horizontal', size_hint_y=0.5)
-        
-        # Spacer to push the button to the right
         top_bar.add_widget(Label(size_hint_x=0.9))
-        
-        # Back button with image
         back_button = Button(
             size_hint=(None, None),
-            size=(50, 50),  # Adjust size as needed
-            background_normal='background_normal.png'  # Path to your image
+            size=(50, 50),
+            background_normal='path/to/your/image.png'
         )
         back_button.bind(on_press=self.go_back)
         top_bar.add_widget(back_button)
-        
         self.add_widget(top_bar)
 
         # Add Income title
@@ -384,6 +381,10 @@ class IncomeEntryScreen(BoxLayout):
         if self.category_spinner.text == 'Select Category':
             self.show_popup('Error', 'Please select a category.')
             return
+
+        # Play sound
+        if self.sound:
+            self.sound.play()
 
         # Add transaction to main screen
         main_screen = self.parent.manager.get_screen('main').children[0]
@@ -439,7 +440,7 @@ class ReportScreen(BoxLayout):
         self.add_widget(top_bar)
 
         # Report title
-        self.add_widget(Label(text='Report Screen', font_size='24sp', size_hint_y=0.05))
+        self.add_widget(Label(text='Report Screen', font_size='24sp', size_hint_y=0.05, bold = True))
 
         # Calculate summary
         income_summary = {}
