@@ -12,27 +12,38 @@ from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from datetime import datetime
 from kivy.core.audio import SoundLoader
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.image import Image
 
 TRANSACTIONS_FILE = 'transactions.json'
 
-class MainScreen(BoxLayout):
+class MainScreen(FloatLayout):
     def __init__(self, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
-        self.orientation = 'vertical'
-        self.spacing = 10
-        self.padding = 10
         self.transactions = []  # List to store transactions
         self.balance = 0.0  # Initialize balance
         self.build_ui()
         self.load_transactions()
 
     def build_ui(self):
+        # Background image
+        background = Image(
+            source='background_image.png',  # Path to your background image
+            allow_stretch=True,
+            keep_ratio=False
+        )
+        self.add_widget(background)
+
+        # Main layout
+        main_layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
+        
         # Account header
         header = BoxLayout(size_hint_y=0.1)
         account_label = Label(
-            text='TEST1',
+            text='My Account 1',
             color=(0.7, 0.7, 1, 1),
             font_size='24sp',
+            bold=True,
             halign='left'
         )
         header.add_widget(account_label)
@@ -76,11 +87,14 @@ class MainScreen(BoxLayout):
         scroll_view.add_widget(self.transactions_layout)
 
         # Add all widgets to main layout
-        self.add_widget(header)
-        self.add_widget(self.balance_label)
-        self.add_widget(button_grid)
-        self.add_widget(history_label)
-        self.add_widget(scroll_view)
+        main_layout.add_widget(header)
+        main_layout.add_widget(self.balance_label)
+        main_layout.add_widget(button_grid)
+        main_layout.add_widget(history_label)
+        main_layout.add_widget(scroll_view)
+
+        # Add main layout to FloatLayout
+        self.add_widget(main_layout)
 
     def dummy_action(self, instance):
         print("Dummy action triggered")

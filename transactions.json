@@ -1,65 +1,16 @@
 [
     {
-        "amount": 21312.0,
-        "category": "Utilities",
-        "note": "",
-        "date": "2025-01-24 22:30:26",
-        "is_income": false
-    },
-    {
-        "amount": 54545.0,
-        "category": "Salary",
-        "note": "",
-        "date": "2025-01-24 22:38:57",
-        "is_income": true
-    },
-    {
-        "amount": 2154.0,
-        "category": "Salary",
-        "note": "",
-        "date": "2025-01-24 22:40:29",
-        "is_income": true
-    },
-    {
-        "amount": 7.0,
+        "amount": 50.0,
         "category": "Food",
-        "note": "",
-        "date": "2025-01-24 22:43:09",
+        "note": "tea",
+        "date": "2025-01-25 23:37:28",
         "is_income": false
     },
     {
-        "amount": 600000.0,
-        "category": "Gift",
-        "note": "",
-        "date": "2025-01-24 23:00:16",
-        "is_income": true
-    },
-    {
-        "amount": 621161.0,
+        "amount": 8800.0,
         "category": "Investment",
         "note": "",
-        "date": "2025-01-24 23:10:15",
-        "is_income": true
-    },
-    {
-        "amount": 500.0,
-        "category": "Salary",
-        "note": "",
-        "date": "2025-01-25 23:17:13",
-        "is_income": true
-    },
-    {
-        "amount": 622.0,
-        "category": "Entertainment",
-        "note": "",
-        "date": "2025-01-25 23:18:45",
-        "is_income": false
-    },
-    {
-        "amount": 500.0,
-        "category": "Gift",
-        "note": "",
-        "date": "2025-01-25 23:18:45",
+        "date": "2025-01-25 23:37:57",
         "is_income": true
     }
 ]
