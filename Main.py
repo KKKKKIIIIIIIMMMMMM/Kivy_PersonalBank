@@ -97,7 +97,9 @@ class MainScreen(FloatLayout):
         self.add_widget(main_layout)
 
     def dummy_action(self, instance):
-        print("Dummy action triggered")
+        print("Navigating to calculator screen")
+        if self.parent:
+            self.parent.manager.current = 'calculator'
 
     def add_expense(self, instance):
         print("Navigating to expense entry screen")
@@ -225,6 +227,63 @@ class MainScreen(FloatLayout):
             print("No previous transactions found.")
         except ValueError as e:
             print(f"Error loading transactions: {e}")
+
+class CalculatorScreen(BoxLayout):
+    def __init__(self, **kwargs):
+        super(CalculatorScreen, self).__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.spacing = 10
+        self.padding = 10
+        self.build_ui()
+
+    def build_ui(self):
+        # Display for calculator
+        self.display = TextInput(
+            readonly=True,
+            halign="right",
+            font_size=55,
+            size_hint_y=0.2
+        )
+        self.add_widget(self.display)
+
+        # Grid for buttons
+        button_grid = GridLayout(cols=4, spacing=10, size_hint_y=0.8)
+
+        buttons = [
+            '7', '8', '9', '/',
+            '4', '5', '6', '*',
+            '1', '2', '3', '-',
+            '.', '0', 'C', '+',
+            '=', 'Back'
+        ]
+
+        for button in buttons:
+            btn = Button(text=button, font_size=32)
+            btn.bind(on_press=self.on_button_press)
+            button_grid.add_widget(btn)
+
+        self.add_widget(button_grid)
+
+    def on_button_press(self, instance):
+        current = self.display.text
+        button_text = instance.text
+
+        if button_text == 'C':
+            # Clear the display
+            self.display.text = ''
+        elif button_text == '=':
+            # Evaluate the expression
+            try:
+                self.display.text = str(eval(current))
+            except Exception as e:
+                self.display.text = 'Error'
+        elif button_text == 'Back':
+            # Navigate back to the main screen
+            self.parent.manager.current = 'main'
+        else:
+            # Add the button text to the display
+            self.display.text += button_text
+
 
 class ExpenseEntryScreen(BoxLayout):
     def __init__(self, **kwargs):
@@ -518,6 +577,11 @@ class AccountApp(App):
         report_screen = Screen(name='report')
         report_screen.add_widget(ReportScreen(main_screen.children[0].transactions))
         sm.add_widget(report_screen)
+
+        # Calculator screen
+        calculator_screen = Screen(name='calculator')
+        calculator_screen.add_widget(CalculatorScreen())
+        sm.add_widget(calculator_screen)
 
         return sm
 
